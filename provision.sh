@@ -53,7 +53,7 @@ USER="admin"
 # superuser密码
 PASS="admin"
 # superuser邮箱
-MAIL="admin@twitter.com"
+MAIL="tongxue616@gmail.com"
 script="
 from django.contrib.auth.models import User;
 
