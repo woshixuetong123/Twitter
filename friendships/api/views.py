@@ -17,6 +17,7 @@ class FriendshipViewSet(viewsets.GenericViewSet):
     # 如果是 Friendship.objects.all 的话就会出现 404 Not Found
     # 因为 detail=True 的 actions 会默认先去调用 get_object() 也就是
     # queryset.filter(pk=1) 查询一下这个 object 在不在
+    serializer_class = FriendshipSerializerForCreate
     queryset = User.objects.all()
 
     @action(methods=['GET'], detail=True, permission_classes=[AllowAny])
@@ -41,6 +42,7 @@ class FriendshipViewSet(viewsets.GenericViewSet):
     def follow(self, request, pk):
         # 特殊判断重复 follow 的情况（比如前端猛点好多少次 follow)
         # 静默处理，不报错，因为这类重复操作因为网络延迟的原因会比较多，没必要当做错误处理
+        # self.get_object()
         if Friendship.objects.filter(from_user=request.user, to_user=pk).exists():
             return Response({
                 'success': True,

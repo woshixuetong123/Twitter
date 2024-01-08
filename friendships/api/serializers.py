@@ -2,6 +2,7 @@ from accounts.api.serializers import UserSerializer
 from friendships.models import Friendship
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from django.contrib.auth.models import User
 
 
 class FriendshipSerializerForCreate(serializers.ModelSerializer):
@@ -17,6 +18,10 @@ class FriendshipSerializerForCreate(serializers.ModelSerializer):
             raise ValidationError({
                 'message': 'from_user_id and to_user_id should be different'
             })
+        # if not User.objects.filter(id=attrs['to_user_id']).exists():
+        #     raise ValidationError({
+        #         'message': 'You cannot follow a non-exist user'
+        #     })
         return attrs
 
     def create(self, validated_data):
