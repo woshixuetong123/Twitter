@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'tweets',
     'friendships',
+    'newsfeeds',
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
