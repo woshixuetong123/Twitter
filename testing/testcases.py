@@ -1,11 +1,10 @@
 from django.test import TestCase as DjangoTestCase
 from django.contrib.auth.models import User
 from tweets.models import Tweet
+from rest_framework.test import APIClient
 
 
 class TestCase(DjangoTestCase):
-
-    #test case for newsfeeds
 
     @property
     def anonymous_client(self):
