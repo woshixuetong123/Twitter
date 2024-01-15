@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'tweets',
     'friendships',
     'newsfeeds',
+    'comments',
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
