@@ -2,10 +2,10 @@ from rest_framework.test import APIClient
 from testing.testcases import TestCase
 from tweets.models import Tweet
 
-
 # 注意要加 '/' 结尾，要不然会产生 301 redirect
 TWEET_LIST_API = '/api/tweets/'
 TWEET_CREATE_API = '/api/tweets/'
+TWEET_RETRIEVE_API = '/api/tweets/{}/'
 
 
 class TweetApiTests(TestCase):
@@ -65,3 +65,8 @@ class TweetApiTests(TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data['user']['id'], self.user1.id)
         self.assertEqual(Tweet.objects.count(), tweets_count + 1)
+
+
+    def test_retrive(self):
+        # tweet with id=-1 does not exist
+        url = TWEET_RETRIEVE_API.format(-1)
