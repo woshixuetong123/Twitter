@@ -20,12 +20,6 @@ class CommentViewSet(viewsets.GenericViewSet):
     queryset = Comment.objects.all()
     filterset_fields = ('tweet_id',)
 
-    # POST /api/comments/ -> create
-    # GET /api/comments/?tweet_id=1 -> list
-    # GET /api/comments/1/ -> retrieve
-    # DELETE /api/comments/1 -> destroy
-    # PATCH /api/comments/1/ -> partial_update
-    # PUT /api/comments/1/ -> update
     def get_permissions(self):
         # 注意要加用 AllowAny() / IsAuthenticated() 实例化出对象
         # 而不是 AllowAny / IsAuthenticated 这样只是一个类名
@@ -37,17 +31,13 @@ class CommentViewSet(viewsets.GenericViewSet):
 
     @required_params(params=['tweet_id'])
     def list(self, request, *args, **kwargs):
-        # if 'tweet_id' not in request.query_params:
-        #     return Response(
-        #         {
-        #             'message': 'missing tweet_id in request',
-        #             'success': False,
-        #         },
-        #         status=status.HTTP_400_BAD_REQUEST,
-        #     )
         queryset = self.get_queryset()
         comments = self.filter_queryset(queryset).order_by('created_at')
-        serializer = CommentSerializer(comments, many=True)
+        serializer = CommentSerializer(
+            comments,
+            context={'request': request},
+            many=True,
+        )
         return Response(
             {'comments': serializer.data},
             status=status.HTTP_200_OK,
@@ -71,7 +61,7 @@ class CommentViewSet(viewsets.GenericViewSet):
         # save 方法会触发 serializer 里的 create 方法，点进 save 的具体实现里可以看到
         comment = serializer.save()
         return Response(
-            CommentSerializer(comment).data,
+            CommentSerializer(comment, context={'request': request}).data,
             status=status.HTTP_201_CREATED,
         )
 
@@ -83,15 +73,14 @@ class CommentViewSet(viewsets.GenericViewSet):
             data=request.data,
         )
         if not serializer.is_valid():
-            return Response({
-                'message': 'Please check input',
-                'errors': serializer.errors,
+            raise Response({
+                'message': 'Please check input'
             }, status=status.HTTP_400_BAD_REQUEST)
         # save 方法会触发 serializer 里的 update 方法，点进 save 的具体实现里可以看到
         # save 是根据 instance 参数有没有传来决定是触发 create 还是 update
         comment = serializer.save()
         return Response(
-            CommentSerializer(comment).data,
+            CommentSerializer(comment, context={'request': request}).data,
             status=status.HTTP_200_OK,
         )
 
