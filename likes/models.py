@@ -3,6 +3,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
+
 class Like(models.Model):
     # https://docs.djangoproject.com/en/3.1/ref/contrib/contenttypes/#generic-relations
     object_id = models.PositiveIntegerField()
