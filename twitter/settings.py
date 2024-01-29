@@ -38,14 +38,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    #third party
     'rest_framework',
     'debug_toolbar',
     'django_filters',
+    'notifications',
+
+
+    #project apps
     'tweets',
     'friendships',
     'newsfeeds',
     'comments',
     'likes',
+    'inbox',
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
