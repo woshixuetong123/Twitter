@@ -20,3 +20,6 @@ LOGGING = {
         }
     }
 }
+
+AWS_ACCESS_KEY_ID = 'jessicaxue1006@gmail.com'
+AWS_SECRET_ACCESS_KEY = 'Haolin@2023'
