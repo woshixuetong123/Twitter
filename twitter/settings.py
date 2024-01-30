@@ -170,7 +170,6 @@ STATIC_URL = '/static/'
 #         }
 #     }
 # }
-
 # 设置存储用户上传文件的 storage 用什么系统
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 TESTING = ((" ".join(sys.argv)).find('manage.py test') != -1)
@@ -180,7 +179,7 @@ if TESTING:
 # 当用s3boto3 作为用户上传文件存储时，需要按照你在 AWS 上创建的配置来设置你的 BUCKET_NAME
 # 和 REGION_NAME，这个值你可以改成你自己创建的 bucket 的名字和所在的 region
 AWS_STORAGE_BUCKET_NAME = 'django-twitter'
-AWS_S3_REGION_NAME = 'us-west-1'
+AWS_S3_REGION_NAME = 'us-west-2'
 
 # 你还需要在 local_settings.py 中设置你的 AWS_ACCESS_KEY_ID 和 AWS_SECRET_ACCESS_KEY
 # 因为这是比较机密的信息，是不适合放在 settings.py 这种共享的配置文件中共享给所有开发者的
@@ -197,7 +196,6 @@ AWS_S3_REGION_NAME = 'us-west-1'
 # - static 里通常是 css,js 文件之类的静态代码文件，是用户可以直接访问的代码文件
 # - media 里使用户上传的数据文件，而不是代码
 MEDIA_ROOT = 'media/'
-
 try:
     from .local_settings_example import *
 except:
