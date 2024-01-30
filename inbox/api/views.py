@@ -1,4 +1,7 @@
-from inbox.api.serializers import NotificationSerializer
+from inbox.api.serializers import (
+    NotificationSerializer,
+    NotificationSerializerForUpdate,
+)
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated

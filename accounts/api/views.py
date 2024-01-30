@@ -83,6 +83,10 @@ class AccountViewSet(viewsets.ViewSet):
             }, status=400)
 
         user = serializer.save()
+
+        # Create UserProfile object
+        user.profile
+
         django_login(request, user)
         return Response({
             'success': True,
@@ -94,9 +98,7 @@ class AccountViewSet(viewsets.ViewSet):
         """
         查看用户当前的登录状态和具体信息
         """
-        data = {'has_logged_in': request.user.is_authenticated,
-                'ip': request.META['REMOTE_ADDR'],
-        }
+        data = {'has_logged_in': request.user.is_authenticated}
         if request.user.is_authenticated:
             data['user'] = UserSerializer(request.user).data
         return Response(data)
