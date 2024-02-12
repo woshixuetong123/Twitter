@@ -196,11 +196,6 @@ AWS_S3_REGION_NAME = 'us-west-2'
 # - static 里通常是 css,js 文件之类的静态代码文件，是用户可以直接访问的代码文件
 # - media 里使用户上传的数据文件，而不是代码
 MEDIA_ROOT = 'media/'
-try:
-    from .local_settings_example import *
-except:
-    pass
-
 # https://docs.djangoproject.com/en/3.1/topics/cache/
 # use `pip install python-memcached`
 # DO NOT pip install memcache or django-memcached
@@ -217,3 +212,8 @@ CACHES = {
         'KEY_PREFIX': 'testing',
     },
 }
+
+try:
+    from .local_settings_example import *
+except:
+    pass
