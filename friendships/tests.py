@@ -1,3 +1,4 @@
+from friendships.models import Friendship
 from friendships.services import FriendshipService
 from testing.testcases import TestCase
 
