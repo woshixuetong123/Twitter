@@ -63,6 +63,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
     ],
+    'EXCEPTION_HANDLER': 'utils.ratelimit.exception_handler',
 }
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -235,10 +236,16 @@ CELERY_QUEUES = (
     Queue('default', routing_key='default'),
     Queue('newsfeeds', routing_key='newsfeeds'),
 )
+
 # Rate Limiter
 RATELIMIT_USE_CACHE = 'ratelimit'
 RATELIMIT_CACHE_PREFIX = 'rl:'   # 避免和其他的 key 冲突
 RATELIMIT_ENABLE = not TESTING  # 在某些环境下，比如内部测试等环境下，一般也会关掉
+
+#Ratelimit can be closed in Dev
+#import os
+#if os.Environ['DEV'] :
+#RATELIMT_ENABLE = not TESTING
 
 try:
     from .local_settings_example import *
