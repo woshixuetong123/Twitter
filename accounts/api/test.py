@@ -3,7 +3,6 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.test import APIClient
 from testing.testcases import TestCase
 
-
 LOGIN_URL = '/api/accounts/login/'
 LOGOUT_URL = '/api/accounts/logout/'
 SIGNUP_URL = '/api/accounts/signup/'
@@ -14,7 +13,7 @@ USER_PROFILE_DETAIL_URL = '/api/profiles/{}/'
 class AccountApiTests(TestCase):
 
     def setUp(self):
-        self.clear_cache()
+        super(AccountApiTests, self).setUp()
         # 这个函数会在每个 test function 执行的时候被执行
         self.client = APIClient()
         self.user = self.create_user(
