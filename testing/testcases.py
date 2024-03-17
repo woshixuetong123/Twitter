@@ -4,7 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.cache import caches
 from django.test import TestCase as DjangoTestCase
 from django_hbase.models import HBaseModel
-from friendships.services import FriendshipService
+from friendships import FriendshipService
 from likes.models import Like
 from newsfeeds.models import NewsFeed
 from rest_framework.test import APIClient
