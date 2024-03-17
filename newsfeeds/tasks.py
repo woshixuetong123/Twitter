@@ -1,5 +1,5 @@
 from celery import shared_task
-from friendships import FriendshipService
+from friendships.services import FriendshipService
 from newsfeeds.constants import FANOUT_BATCH_SIZE
 from newsfeeds.models import NewsFeed
 from utils.time_constants import ONE_HOUR

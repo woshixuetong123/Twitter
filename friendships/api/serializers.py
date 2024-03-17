@@ -1,39 +1,76 @@
-from django_hbase import models
+from accounts.api.serializers import UserSerializerForFriendship
+from accounts.services import UserService
+from friendships.models import Friendship
+from friendships.services import FriendshipService
+from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 
-class HBaseFollowing(models.HBaseModel):
-    """
-    存储 from_user_id follow 了哪些人，row_key 按照 from_user_id + created_at 排序
-    可以支持查询：
-     - A 关注的所有人按照关注时间排序
-     - A 在某个时间段内关注的人有哪些
-     - A 在某个时间点之后/之前关注的前 X 个人是谁
-    """
-    # row key
-    from_user_id = models.IntegerField(reverse=True)
-    created_at = models.TimestampField()
-    # column key
-    to_user_id = models.IntegerField(column_family='cf')
+class BaseFriendshipSerializer(serializers.Serializer):
+    user = serializers.SerializerMethodField()
+    created_at = serializers.SerializerMethodField()
+    has_followed = serializers.SerializerMethodField()
+
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
+
+    def get_user_id(self, obj):
+        raise NotImplementedError
+
+    def _get_following_user_id_set(self):
+        if self.context['request'].user.is_anonymous:
+            return {}
+        if hasattr(self, '_cached_following_user_id_set'):
+            return self._cached_following_user_id_set
+        user_id_set = FriendshipService.get_following_user_id_set(
+            self.context['request'].user.id,
+        )
+        setattr(self, '_cached_following_user_id_set', user_id_set)
+        return user_id_set
+
+    def get_has_followed(self, obj):
+        return self.get_user_id(obj) in self._get_following_user_id_set()
+
+    def get_user(self, obj):
+        user = UserService.get_user_by_id(self.get_user_id(obj))
+        return UserSerializerForFriendship(user).data
+
+    def get_created_at(self, obj):
+        return obj.created_at
+
+
+class FriendshipSerializerForCreate(serializers.ModelSerializer):
+    from_user_id = serializers.IntegerField()
+    to_user_id = serializers.IntegerField()
 
     class Meta:
-        table_name = 'twitter_followings'
-        row_key = ('from_user_id', 'created_at')
+        model = Friendship
+        fields = ('from_user_id', 'to_user_id')
+
+    def validate(self, attrs):
+        if attrs['from_user_id'] == attrs['to_user_id']:
+            raise ValidationError({
+                'message': 'from_user_id and to_user_id should be different'
+            })
+        return attrs
+
+    def create(self, validated_data):
+        from_user_id = validated_data['from_user_id']
+        to_user_id = validated_data['to_user_id']
+        return FriendshipService.follow(
+            from_user_id=from_user_id,
+            to_user_id=to_user_id,
+        )
 
 
-class HBaseFollower(models.HBaseModel):
-    """
-    存储 to_user_id 被哪些人 follow 了，row_key 按照 to_user_id + created_at 排序
-    可以支持查询：
-     - A 的所有粉丝按照关注时间排序
-     - A 在某个时间段内被哪些粉丝关注了
-     - 哪 X 人在某个时间点之后/之前关注了 A
-    """
-    # row key
-    to_user_id = models.IntegerField(reverse=True)
-    created_at = models.TimestampField()
-    # column key
-    from_user_id = models.IntegerField(column_family='cf')
+class FollowerSerializer(BaseFriendshipSerializer):
+    def get_user_id(self, obj):
+        return obj.from_user_id
 
-    class Meta:
-        row_key = ('to_user_id', 'created_at')
-        table_name = 'twitter_followers'
+
+class FollowingSerializer(BaseFriendshipSerializer):
+    def get_user_id(self, obj):
+        return obj.to_user_id

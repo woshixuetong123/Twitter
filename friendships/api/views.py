@@ -1,12 +1,12 @@
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
-from friendships import (
+from friendships.api.serializers import (
     FollowerSerializer,
     FollowingSerializer,
     FriendshipSerializerForCreate,
 )
-from friendships import HBaseFollowing, HBaseFollower, Friendship
-from friendships import FriendshipService
+from friendships.models import HBaseFollowing, HBaseFollower, Friendship
+from friendships.services import FriendshipService
 from gatekeeper.models import GateKeeper
 from ratelimit.decorators import ratelimit
 from rest_framework import viewsets, status

@@ -19,7 +19,7 @@ from rest_framework import routers
 
 from accounts.api.views import UserViewSet, AccountViewSet, UserProfileViewSet
 from comments.api.views import CommentViewSet
-from friendships import FriendshipViewSet
+from friendships.api.views import FriendshipViewSet
 from inbox.api.views import NotificationViewSet
 from likes.api.views import LikeViewSet
 from newsfeeds.api.views import NewsFeedViewSet
